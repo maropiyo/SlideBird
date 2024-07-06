@@ -14,7 +14,7 @@ namespace Project.Scripts.Title.View
         [SerializeField] private Button _button;
 
         /// <summary>
-        /// クリックイベントを通知する
+        /// ボタンのクリックイベントをObservableとして公開する
         /// </summary>
         public IObservable<Unit> OnClickAsObservable()
         {

@@ -15,7 +15,7 @@ namespace Project.Scripts.Title.Presenter
 
         private void Start()
         {
-            // ビューのプレイボタンのクリックイベントを監視
+            // プレイボタンのクリックイベントを監視する
             _playButton.OnClickAsObservable()
                 .Subscribe(_ => OnClickPlayButton())
                 .AddTo(this);
