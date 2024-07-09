@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8466274975192497341}
   - component: {fileID: 572395614729524356}
+  - component: {fileID: 224967959752206715}
   m_Layer: 0
   m_Name: block_bird_blue_1x1
   m_TagString: Untagged
@@ -84,3 +85,16 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &224967959752206715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1524527517471939350}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb9116685fa6641bea744e755f3e12e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  width: 1
