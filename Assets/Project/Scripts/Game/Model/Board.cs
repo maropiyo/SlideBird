@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -7,7 +9,11 @@ public class Board : MonoBehaviour
 {
     // ボードの1マスを表すタイルのプレハブ
     [SerializeField] private GameObject tilePrefab;
+    // ブロックの生成を行うクラス
+    [SerializeField] private BlockFactory blockFactory;
 
+    // 現在のブロックリスト
+    private readonly List<GameObject> currentBlocks = new();
     // ボードの行数, 列数
     private readonly int rows = 10, columns = 8;
 
@@ -35,4 +41,25 @@ public class Board : MonoBehaviour
             }
         }
     }
+
+    /// <summary>
+    /// ブロックを1行分上に移動する
+    /// </summary>
+    void MoveBlocksUp()
+    {
+        foreach (var block in currentBlocks)
+        {
+            block.transform.position += new Vector3(0, 1, 0);
+        }
+    }
+
+    public void onClick()
+    {
+        // ブロックを1行分上に移動する
+        MoveBlocksUp();
+
+        // 1行分のブロックを生成する
+        currentBlocks.AddRange(blockFactory.GenerateRowBlocks(columns));
+    }
+
 }
