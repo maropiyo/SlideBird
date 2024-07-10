@@ -41,24 +41,4 @@ public class Board : MonoBehaviour
             }
         }
     }
-
-    /// <summary>
-    /// ブロックを1行分上に移動する
-    /// </summary>
-    void MoveBlocksUp()
-    {
-        foreach (var block in currentBlocks)
-        {
-            block.transform.position += new Vector3(0, 1, 0);
-        }
-    }
-
-    public void onClick()
-    {
-        // ブロックを1行分上に移動する
-        MoveBlocksUp();
-
-        // 1行分のブロックを生成する
-        currentBlocks.AddRange(blockGenerator.GenerateRowBlocks(columns));
-    }
 }
