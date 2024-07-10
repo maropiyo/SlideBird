@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -7,7 +9,11 @@ public class Board : MonoBehaviour
 {
     // ボードの1マスを表すタイルのプレハブ
     [SerializeField] private GameObject tilePrefab;
+    // ブロックジェネレーター
+    [SerializeField] private BlockGenerator blockGenerator;
 
+    // 現在のブロックリスト
+    private readonly List<GameObject> currentBlocks = new();
     // ボードの行数, 列数
     private readonly int rows = 10, columns = 8;
 
