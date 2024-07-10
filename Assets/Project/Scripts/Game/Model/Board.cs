@@ -9,8 +9,8 @@ public class Board : MonoBehaviour
 {
     // ボードの1マスを表すタイルのプレハブ
     [SerializeField] private GameObject tilePrefab;
-    // ブロックの生成を行うクラス
-    [SerializeField] private BlockFactory blockFactory;
+    // ブロックジェネレーター
+    [SerializeField] private BlockGenerator blockGenerator;
 
     // 現在のブロックリスト
     private readonly List<GameObject> currentBlocks = new();
@@ -59,7 +59,6 @@ public class Board : MonoBehaviour
         MoveBlocksUp();
 
         // 1行分のブロックを生成する
-        currentBlocks.AddRange(blockFactory.GenerateRowBlocks(columns));
+        currentBlocks.AddRange(blockGenerator.GenerateRowBlocks(columns));
     }
-
 }

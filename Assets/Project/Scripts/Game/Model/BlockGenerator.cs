@@ -2,9 +2,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// ブロックの生成を行うクラス
+/// ブロックジェネレーター
+/// ブロックの生成に関する処理を行う
 /// </summary>
-public class BlockFactory : MonoBehaviour
+public class BlockGenerator : MonoBehaviour
 {
     // 横幅1のブロックのプレハブリスト
     [SerializeField] private List<GameObject> width1BlockPrefabs;
@@ -17,7 +18,7 @@ public class BlockFactory : MonoBehaviour
 
     /// <summary>
     /// 1行分のブロックを生成する
-    /// 1~4の横幅のブロックとブロックを置かない範囲を合わせて横幅が8になるようにブロックを生成する
+    /// 1~4の横幅のブロックとブロックを置かない範囲を合わせて列数になるようにブロックを生成する
     /// </summary>
     /// <param name="columns">列数</param>
     /// <returns>生成したブロックのリスト</returns>
@@ -37,7 +38,7 @@ public class BlockFactory : MonoBehaviour
     }
 
     /// <summary>
-    /// 横幅の合計が利用可能な横幅になるように複数のブロックを選択する
+    /// 横幅の合計が利用可能な横幅になるように生成するブロックを選択する
     /// </summary>
     /// <param name="availableWidth">横幅の合計</param>
     /// <returns>選択されたブロックのリスト</returns>
@@ -46,7 +47,7 @@ public class BlockFactory : MonoBehaviour
         // 選択されたブロックのリスト
         List<GameObject> selectedBlockPrefabs = new();
 
-        // 1~4の横幅のブロックのプレハブリストからランダムに1つ取得
+        // 利用可能な横幅が0になるまで繰り返す
         while (availableWidth > 0)
         {
             // ランダムにブロックの横幅を決定
@@ -63,18 +64,22 @@ public class BlockFactory : MonoBehaviour
             {
                 // 横幅が1の場合
                 case 1:
+                    // 横幅1のブロックのプレハブリストからランダムに1つ取得
                     selectedBlockPrefabs.Add(width1BlockPrefabs[Random.Range(0, width1BlockPrefabs.Count)]);
                     break;
                 // 横幅が2の場合
                 case 2:
+                    // 横幅2のブロックのプレハブリストからランダムに1つ取得
                     selectedBlockPrefabs.Add(width2BlockPrefabs[Random.Range(0, width2BlockPrefabs.Count)]);
                     break;
                 // 横幅が3の場合
                 case 3:
+                    // 横幅3のブロックのプレハブリストからランダムに1つ取得
                     selectedBlockPrefabs.Add(width3BlockPrefabs[Random.Range(0, width3BlockPrefabs.Count)]);
                     break;
                 // 横幅が4の場合
                 case 4:
+                    // 横幅4のブロックのプレハブリストからランダムに1つ取得
                     selectedBlockPrefabs.Add(width4BlockPrefabs[Random.Range(0, width4BlockPrefabs.Count)]);
                     break;
             }

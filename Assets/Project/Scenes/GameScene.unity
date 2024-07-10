@@ -704,7 +704,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tilePrefab: {fileID: 4962994239041900474, guid: 4dcc701475a8d43b287740d1818d7c35, type: 3}
-  blockFactory: {fileID: 1789387515}
+  blockGenerator: {fileID: 1789387515}
 --- !u!224 &1789387514
 RectTransform:
   m_ObjectHideFlags: 0
