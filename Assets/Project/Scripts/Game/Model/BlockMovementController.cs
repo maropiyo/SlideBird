@@ -16,4 +16,17 @@ public class BlockMovementController : MonoBehaviour
         // ブロックを下に移動
         transform.position -= new Vector3(0, distance, 0);
     }
+
+    /// <summary>
+    /// ブロックのリストを１マス上に移動する
+    /// </summary>
+    /// <param name="blocks">ブロックのリスト</param>
+    public void MoveBlocksUp(List<GameObject> blocks)
+    {
+        // ブロックのリストを１マス上に移動
+        foreach (var block in blocks)
+        {
+            block.transform.position += new Vector3(0, 1, 0);
+        }
+    }
 }

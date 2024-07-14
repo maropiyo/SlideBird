@@ -9,13 +9,9 @@ public class Board : MonoBehaviour
 {
     // ボードの1マスを表すタイルのプレハブ
     [SerializeField] private GameObject tilePrefab;
-    // ブロックジェネレーター
-    [SerializeField] private BlockGenerator blockGenerator;
 
-    // 現在のブロックリスト
-    private readonly List<GameObject> currentBlocks = new();
     // ボードの行数, 列数
-    private readonly int rows = 10, columns = 8;
+    public int rows = 10, columns = 8;
 
     void Start()
     {
@@ -27,7 +23,7 @@ public class Board : MonoBehaviour
     /// ボードを生成する
     /// ボード上に定義した行数, 列数のタイルを生成する
     /// </summary>
-    void GenerateBoard()
+    public void GenerateBoard()
     {
         for (int row = 0; row < rows; row++)
         {

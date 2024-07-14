@@ -129,10 +129,7 @@ public class BlockGenerator : MonoBehaviour
                 float XPos = currentXPos + (width / 2) - 0.5f;
 
                 // ブロックのプレファブをゲームオブジェクトとして生成
-                GameObject block = Instantiate(blockPrefab, new Vector3(XPos, 0, 0), Quaternion.identity);
-
-                // ブロックをボードの子要素にする
-                block.transform.parent = transform;
+                GameObject block = Instantiate(blockPrefab, new Vector3(XPos, -1.1f, 0), Quaternion.identity);
 
                 // 生成したブロックをリストに追加
                 generatedBlocks.Add(block);
