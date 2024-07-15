@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1899387284836572449}
   - component: {fileID: 6690819906819770953}
   - component: {fileID: 7992147371819250118}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: block_bird_yellow_1x1
   m_TagString: Block
   m_Icon: {fileID: 0}
@@ -112,7 +112,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d6e4181917384ff18f78f3a91c052bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  block: {fileID: 1899387284836572449}
 --- !u!61 &7992147371819250118
 BoxCollider2D:
   m_ObjectHideFlags: 0
