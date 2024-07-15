@@ -1,0 +1,106 @@
+using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEngine;
+
+/// <summary>
+/// ゲームの管理クラス
+/// </summary>
+public class GameManager : MonoBehaviour
+{
+    // ボード
+    [SerializeField] private Board board;
+
+    // ブロックの生成クラス
+    [SerializeField] private BlockGenerator blockGenerator;
+
+    // ブロックの移動クラス
+    [SerializeField] private BlockMovementController blockMovementController;
+
+    // 現在のブロックリスト
+    private readonly List<GameObject> currentBlocks = new();
+
+    // 次に生成するブロックリスト
+    private List<GameObject> nextBlocks;
+
+    void Start()
+    {
+        // ボードを生成する
+        board.GenerateBoard();
+
+        // 次にボードに追加するブロックを生成
+        GenerateNextRowBlocks();
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            DropCurrentBlocks();
+        }
+
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            GenerateBlocks();
+        }
+    }
+
+    /// <summary>
+    /// ブロックを生成する
+    /// </summary>
+    public void GenerateBlocks()
+    {
+        foreach (var block in currentBlocks)
+        {
+            // ブロックの落下フラグをfalseにする
+            block.GetComponent<Block>().isFalling = false;
+        }
+        // ブロックをボードに追加
+        AddBlocksToBoard();
+    }
+
+    /// <summary>
+    /// 現在のブロックを落下させる
+    /// </summary>
+    public void DropCurrentBlocks()
+    {
+        foreach (var block in currentBlocks)
+        {
+            // ブロックの落下フラグをtrueにする
+            block.GetComponent<Block>().isFalling = true;
+        }
+    }
+
+    /// <summary>
+    /// ブロックをボードに追加する
+    /// </summary>
+    private void AddBlocksToBoard()
+    {
+        // ブロックをボードに追加
+        foreach (var block in nextBlocks)
+        {
+            // ブロックをボードの子要素にする
+            block.transform.parent = board.transform;
+
+            // ブロックの位置を調整
+            block.transform.position += new Vector3(0, 0.1f, 0);
+        }
+
+        // 現在のブロックリストに追加
+        currentBlocks.AddRange(nextBlocks);
+
+        // 現在のブロックを１マス上に移動
+        blockMovementController.MoveBlocksUp(currentBlocks);
+
+        // 次にボードに追加するブロックを生成
+        GenerateNextRowBlocks();
+    }
+
+    /// <summary>
+    /// 次にボードに追加するブロックを生成する
+    /// </summary>
+    private void GenerateNextRowBlocks()
+    {
+        // 次に生成するブロックリストを取得
+        nextBlocks = blockGenerator.GenerateRowBlocks(board.columns);
+    }
+}
