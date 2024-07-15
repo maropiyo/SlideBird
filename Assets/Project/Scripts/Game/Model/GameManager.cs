@@ -16,9 +16,6 @@ public class GameManager : MonoBehaviour
     // ブロックの移動クラス
     [SerializeField] private BlockMovementController blockMovementController;
 
-    // ブロックのレイヤーマスク
-    [SerializeField] private LayerMask blockLayer;
-
     // 現在のブロックリスト
     private readonly List<GameObject> currentBlocks = new();
 
@@ -32,17 +29,19 @@ public class GameManager : MonoBehaviour
 
         // 次にボードに追加するブロックを生成
         GenerateNextRowBlocks();
-
-        GenerateBlocks();
-
-        GenerateBlocks();
-
-        GenerateBlocks();
     }
 
     void Update()
     {
-        DropBlocks();
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            DropCurrentBlocks();
+        }
+
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            GenerateBlocks();
+        }
     }
 
     /// <summary>
@@ -50,14 +49,31 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void GenerateBlocks()
     {
+        foreach (var block in currentBlocks)
+        {
+            // ブロックの落下フラグをfalseにする
+            block.GetComponent<Block>().isFalling = false;
+        }
         // ブロックをボードに追加
         AddBlocksToBoard();
     }
 
     /// <summary>
+    /// 現在のブロックを落下させる
+    /// </summary>
+    public void DropCurrentBlocks()
+    {
+        foreach (var block in currentBlocks)
+        {
+            // ブロックの落下フラグをtrueにする
+            block.GetComponent<Block>().isFalling = true;
+        }
+    }
+
+    /// <summary>
     /// ブロックをボードに追加する
     /// </summary>
-    void AddBlocksToBoard()
+    private void AddBlocksToBoard()
     {
         // ブロックをボードに追加
         foreach (var block in nextBlocks)
@@ -86,55 +102,5 @@ public class GameManager : MonoBehaviour
     {
         // 次に生成するブロックリストを取得
         nextBlocks = blockGenerator.GenerateRowBlocks(board.columns);
-    }
-
-    /// <summary>
-    /// ドロップ可能なブロックを落下させる
-    /// </summary>
-    public void DropBlocks()
-    {
-
-        foreach (var block in currentBlocks)
-        {
-            // ブロックの下が空白の場合はブロックを下に移動
-            while (IsEmptyBlockUnder(block))
-            {
-                blockMovementController.MoveBlockDown(block);
-            }
-        }
-    }
-
-    /// <summary>
-    /// ブロックの下が空白か
-    /// </summary>
-    /// <param name="block">判定するブロック</param>
-    /// <returns>ブロックの下が空白か</returns>
-    private bool IsEmptyBlockUnder(GameObject block)
-    {
-        // ブロックの座標が0の場合はfalseを返す
-        if (block.transform.position.y == 0)
-        {
-            return false;
-        }
-
-        // ブロックの横幅を取得
-        float width = block.GetComponent<Block>().width;
-
-        // ブロックの横幅分下に空白があるかチェック
-        for (int x = 0; x < width; x++)
-        {
-            // X座標の初期位置を計算
-            float initialX = block.transform.position.x - (width * 0.5f - 0.5f);
-
-            // チェックをする位置を計算
-            Vector3 position = new(initialX + x, block.transform.position.y - 1, block.transform.position.z);
-
-            // ブロックがある場合はfalseを返す
-            if (Physics2D.OverlapPointAll(position, blockLayer).Length > 0)
-            {
-                return false;
-            }
-        }
-        return true;
     }
 }

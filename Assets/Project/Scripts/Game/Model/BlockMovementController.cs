@@ -1,21 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 /// <summary>
-/// ブロックの移動を制御するクラス
+/// ブロック移動を制御するクラス
 /// </summary>
 public class BlockMovementController : MonoBehaviour
 {
-    /// <summary>
-    /// ブロックを１マス下に移動する
-    /// </summary>
-    /// <param name="block">移動するブロック</param>
-    public void MoveBlockDown(GameObject block)
-    {
-        block.transform.position += new Vector3(0, -1, 0);
-    }
-
     /// <summary>
     /// ブロックのリストを１マス上に移動する
     /// </summary>
@@ -25,7 +17,7 @@ public class BlockMovementController : MonoBehaviour
         // ブロックのリストを１マス上に移動
         foreach (var block in blocks)
         {
-            block.transform.position += new Vector3(0, 1, 0);
+            block.transform.DOLocalMoveY(block.transform.position.y + 1, 0.1f);
         }
     }
 }
