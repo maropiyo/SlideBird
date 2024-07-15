@@ -8,13 +8,12 @@ using UnityEngine;
 public class BlockMovementController : MonoBehaviour
 {
     /// <summary>
-    /// ブロックを下に移動する
+    /// ブロックを１マス下に移動する
     /// </summary>
-    /// <param name="distance">移動距離</param>
-    public void MoveBlockDown(int distance)
+    /// <param name="block">移動するブロック</param>
+    public void MoveBlockDown(GameObject block)
     {
-        // ブロックを下に移動
-        transform.position -= new Vector3(0, distance, 0);
+        block.transform.position += new Vector3(0, -1, 0);
     }
 
     /// <summary>
