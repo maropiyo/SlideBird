@@ -100,6 +100,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   width: 4
+  isFalling: 0
+  blockLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!114 &475300703889905798
 MonoBehaviour:
   m_ObjectHideFlags: 0
