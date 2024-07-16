@@ -1,9 +1,9 @@
-using Project.Scripts.Title.View;
+using Assets.Project.Scripts.Title.View;
 using UniRx;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Project.Scripts.Title.Presenter
+namespace Assets.Project.Scripts.Title.Presenter
 {
     /// <summary>
     /// タイトル画面のプレゼンター

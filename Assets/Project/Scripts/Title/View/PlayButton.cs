@@ -3,7 +3,7 @@ using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Project.Scripts.Title.View
+namespace Assets.Project.Scripts.Title.View
 {
     /// <summary>
     /// プレイボタン(View)
