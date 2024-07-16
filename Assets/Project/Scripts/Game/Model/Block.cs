@@ -16,6 +16,9 @@ namespace Assets.Project.Scripts.Game.Model
         // ブロックのレイヤー
         [SerializeField] private LayerMask blockLayer;
 
+        // ホールド中か
+        public bool isHolding;
+
         void Update()
         {
             // 下にブロックがない場合は1マス下に移動する
