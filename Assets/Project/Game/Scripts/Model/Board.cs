@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Assets.Project.Scripts.Game.Model
+namespace Assets.Project.Game.Scripts.Model
 {
     /// <summary>
     /// ボードのクラス

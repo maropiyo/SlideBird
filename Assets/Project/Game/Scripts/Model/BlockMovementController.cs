@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
-namespace Assets.Project.Scripts.Game.Model
+namespace Assets.Project.Game.Scripts.Model
 {
     /// <summary>
     /// ブロック移動を制御するクラス
