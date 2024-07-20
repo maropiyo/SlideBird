@@ -74,12 +74,8 @@ namespace Assets.Project.Game.Scripts.Model
                 // クリック位置
                 tapPosition = mousePosition;
 
-                // 落下フラグをfalseにする
-                foreach (var block in currentBlocks)
-                {
-                    // ブロックの落下フラグをfalseにする
-                    block.GetComponent<Block>().isFalling = false;
-                }
+                // ブロックの移動許可フラグをfalseにする
+                SetBlockMoveAllowed(false);
 
                 RaycastHit2D hit = Physics2D.Raycast(mousePosition, Vector2.zero);
 
@@ -127,7 +123,7 @@ namespace Assets.Project.Game.Scripts.Model
         private void AdjustBlockPosition(GameObject block)
         {
             // ブロックの横幅
-            int width = block.GetComponent<Block>().width;
+            int width = block.GetComponent<Block>().Width;
 
             switch (width)
             {
@@ -160,11 +156,8 @@ namespace Assets.Project.Game.Scripts.Model
                 return;
             }
 
-            foreach (var block in currentBlocks)
-            {
-                // ブロックの落下フラグをfalseにする
-                block.GetComponent<Block>().isFalling = false;
-            }
+            SetBlockMoveAllowed(false);
+
             isGenerating = true;
             // ブロックをボードに追加
             AddBlocksToBoard();
@@ -180,11 +173,8 @@ namespace Assets.Project.Game.Scripts.Model
                 return;
             }
 
-            foreach (var block in currentBlocks)
-            {
-                // ブロックの落下フラグをtrueにする
-                block.GetComponent<Block>().isFalling = true;
-            }
+            // ブロックの移動許可フラグをtrueにする
+            SetBlockMoveAllowed(true);
         }
 
         /// <summary>
@@ -219,6 +209,18 @@ namespace Assets.Project.Game.Scripts.Model
         {
             // 次に生成するブロックリストを取得
             nextBlocks = blockGenerator.GenerateRowBlocks(board.columns);
+        }
+
+        /// <summary>
+        /// ゲーム上のブロックの移動許可フラグを設定する
+        /// </summary>
+        /// <param name="isMoveAllowed">移動許可フラグ</param>
+        public void SetBlockMoveAllowed(bool isMoveAllowed)
+        {
+            foreach (var block in currentBlocks)
+            {
+                block.GetComponent<Block>().isMoveAllowed = isMoveAllowed;
+            }
         }
     }
 }
