@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Assets.Project.Scripts.Game.Model
@@ -11,7 +12,7 @@ namespace Assets.Project.Scripts.Game.Model
         // ブロックの横幅
         public int width;
         // 落下フラグ
-        public bool isFalling;
+        public bool isFalling = false;
 
         // ブロックのレイヤー
         [SerializeField] private LayerMask blockLayer;
@@ -26,6 +27,68 @@ namespace Assets.Project.Scripts.Game.Model
             {
                 MoveBlockDown();
             }
+        }
+
+        /// <summary>
+        /// ブロックの左何マスが空白か
+        /// </summary>
+        public int EmptyCountBlockLeft()
+        {
+            int emptyCount = 0;
+
+            while (true)
+            {
+                // チェックをする位置を計算
+                Vector3 position = new(transform.position.x - (width * 0.5f + 0.05f) - emptyCount, transform.position.y, transform.position.z);
+
+                if (position.x < 0)
+                {
+                    break;
+                }
+
+                // ブロックがある場合はループを抜ける
+                if (Physics2D.OverlapPoint(position, blockLayer))
+                {
+                    break;
+                }
+                else
+                {
+                    emptyCount++;
+                }
+            }
+
+            return emptyCount;
+        }
+
+        /// <summary>
+        /// ブロックの右に何マスが空白があるか
+        /// </summary>
+        public int EmptyCountBlockRight()
+        {
+            int emptyCount = 0;
+
+            while (true)
+            {
+                // チェックをする位置を計算
+                Vector3 position = new(transform.position.x + (width * 0.5f + 0.05f) + emptyCount, transform.position.y, transform.position.z);
+
+                if (position.x > 7)
+                {
+                    break;
+                }
+
+                // ブロックがある場合はループを抜ける
+                if (Physics2D.OverlapPoint(position, blockLayer))
+                {
+                    break;
+                }
+                else
+                {
+                    emptyCount++;
+                }
+            }
+
+            return emptyCount;
         }
 
         private void MoveBlockDown()
@@ -47,7 +110,7 @@ namespace Assets.Project.Scripts.Game.Model
                 float initialX = transform.position.x - (width * 0.5f - 0.5f);
 
                 // チェックをする位置を計算
-                Vector3 position = new(initialX + x, transform.position.y - 0.51f, transform.position.z);
+                Vector3 position = new(initialX + x, transform.position.y - 0.55f, transform.position.z);
 
                 // ブロックがある場合はfalseを返す
                 if (Physics2D.OverlapPoint(position, blockLayer))
