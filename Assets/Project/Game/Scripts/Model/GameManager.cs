@@ -92,9 +92,6 @@ namespace Assets.Project.Game.Scripts.Model
                     minX = tapPosition.x + offset.x - holdingBlock.GetComponent<Block>().EmptyCountBlockLeft();
                     // 可動範囲の最大値を設定
                     maxX = tapPosition.x + offset.x + holdingBlock.GetComponent<Block>().EmptyCountBlockRight();
-
-                    Debug.Log(holdingBlock.GetComponent<Block>().EmptyCountBlockLeft() + "::" + holdingBlock.GetComponent<Block>().EmptyCountBlockRight());
-                    Debug.Log(minX + "::" + maxX);
                 }
             }
 
@@ -108,7 +105,7 @@ namespace Assets.Project.Game.Scripts.Model
             if (Input.GetMouseButtonUp(0) && holdingBlock != null)
             {
                 // ブロックの位置を調整
-                AdjustBlockPosition(holdingBlock);
+                AdjustBlockXPosition(holdingBlock);
 
                 holdingBlock = null;
 
@@ -120,30 +117,26 @@ namespace Assets.Project.Game.Scripts.Model
         /// ブロックの位置を調整する
         /// </summary>
         /// <param name="block">調整するブロック</param>
-        private void AdjustBlockPosition(GameObject block)
+        private void AdjustBlockXPosition(GameObject block)
         {
             // ブロックの横幅
             int width = block.GetComponent<Block>().width;
+            // 調整後のX座標
+            float adjustedXPosition;
 
-            switch (width)
+            if (width % 2 == 0)
             {
-                case 1:
-                    // ブロックの位置を調整
-                    block.transform.position = new Vector3(Mathf.Round(block.transform.position.x), block.transform.position.y, block.transform.position.z);
-                    break;
-                case 2:
-                    // ブロックの位置を調整
-                    block.transform.position = new Vector3(Mathf.Floor(block.transform.position.x) + 0.5f, block.transform.position.y, block.transform.position.z);
-                    break;
-                case 3:
-                    // ブロックの位置を調整
-                    block.transform.position = new Vector3(Mathf.Round(block.transform.position.x), block.transform.position.y, block.transform.position.z);
-                    break;
-                case 4:
-                    // ブロックの位置を調整
-                    block.transform.position = new Vector3(Mathf.Floor(block.transform.position.x) + 0.5f, block.transform.position.y, block.transform.position.z);
-                    break;
+                // ブロックの横幅が偶数の場合は、切り捨てた値に0.5を足す
+                adjustedXPosition = Mathf.Floor(block.transform.position.x) + 0.5f;
             }
+            else // 奇数幅のブロックの場合
+            {
+                // // ブロックの横幅が奇数の場合は、四捨五入する
+                adjustedXPosition = Mathf.Round(block.transform.position.x);
+            }
+
+            // ブロックの位置を更新
+            block.transform.position = new Vector3(adjustedXPosition, block.transform.position.y, block.transform.position.z);
         }
 
         /// <summary>
