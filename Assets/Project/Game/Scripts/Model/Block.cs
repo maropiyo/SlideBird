@@ -25,65 +25,21 @@ namespace Assets.Project.Game.Scripts.Model
         }
 
         /// <summary>
-        /// ブロックの左何マスが空白か
+        /// ブロックの左に何マス空白があるか
         /// </summary>
+        /// <returns>ブロックの左に何マス空白があるか</returns>
         public int EmptyCountBlockLeft()
         {
-            int emptyCount = 0;
-
-            while (true)
-            {
-                // チェックをする位置を計算
-                Vector3 position = new(transform.position.x - (width * 0.5f + 0.05f) - emptyCount, transform.position.y, transform.position.z);
-
-                if (position.x < 0)
-                {
-                    break;
-                }
-
-                // ブロックがある場合はループを抜ける
-                if (Physics2D.OverlapPoint(position, blockLayer))
-                {
-                    break;
-                }
-                else
-                {
-                    emptyCount++;
-                }
-            }
-
-            return emptyCount;
+            return GetEmptyBlockCount(-1);
         }
 
         /// <summary>
         /// ブロックの右に何マスが空白があるか
         /// </summary>
+        /// <returns>ブロックの右に何マスが空白があるか</returns>
         public int EmptyCountBlockRight()
         {
-            int emptyCount = 0;
-
-            while (true)
-            {
-                // チェックをする位置を計算
-                Vector3 position = new(transform.position.x + (width * 0.5f + 0.05f) + emptyCount, transform.position.y, transform.position.z);
-
-                if (position.x > 7)
-                {
-                    break;
-                }
-
-                // ブロックがある場合はループを抜ける
-                if (Physics2D.OverlapPoint(position, blockLayer))
-                {
-                    break;
-                }
-                else
-                {
-                    emptyCount++;
-                }
-            }
-
-            return emptyCount;
+            return GetEmptyBlockCount(1);
         }
 
         /// <summary>
@@ -137,6 +93,43 @@ namespace Assets.Project.Game.Scripts.Model
             }
             // ブロックがない場合はtrueを返す
             return true;
+        }
+
+        /// <summary>
+        /// ブロックの左右何マスが空白かを確認して返す
+        /// </summary>
+        /// <param name="direction">-1で左、1で右</param>
+        /// <returns>空白のマス数</returns>
+        private int GetEmptyBlockCount(int direction)
+        {
+            // 空白のマスの数
+            int emptyBlockCount = 0;
+
+            // チェックをする初期位置を計算
+            Vector3 checkPosition = new(
+                transform.position.x + direction * (width * 0.5f + 0.5f),
+                transform.position.y,
+                transform.position.z
+            );
+
+            // ボードの範囲内で確認する
+            while (checkPosition.x >= 0 && checkPosition.x <= 7)
+            {
+                // ブロックがある場合はループを抜ける、空白の場合は空白のマス数を増やしてチェックをする位置を更新
+                if (Physics2D.OverlapPoint(checkPosition, blockLayer))
+                {
+                    break;
+                }
+                else
+                {
+                    // 空白のマス数を増やす
+                    emptyBlockCount++;
+                    // チェックをする位置を更新
+                    checkPosition.x += direction;
+                }
+            }
+
+            return emptyBlockCount;
         }
     }
 }
