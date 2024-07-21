@@ -9,7 +9,7 @@ namespace Assets.Project.Game.Scripts.Model
     public class Block : MonoBehaviour
     {
         // 横幅
-        public int Width { get; }
+        public int width;
         // 移動許可フラグ
         public bool isMoveAllowed = false;
         // ブロックのレイヤーマスク
@@ -34,7 +34,7 @@ namespace Assets.Project.Game.Scripts.Model
             while (true)
             {
                 // チェックをする位置を計算
-                Vector3 position = new(transform.position.x - (Width * 0.5f + 0.05f) - emptyCount, transform.position.y, transform.position.z);
+                Vector3 position = new(transform.position.x - (width * 0.5f + 0.05f) - emptyCount, transform.position.y, transform.position.z);
 
                 if (position.x < 0)
                 {
@@ -65,7 +65,7 @@ namespace Assets.Project.Game.Scripts.Model
             while (true)
             {
                 // チェックをする位置を計算
-                Vector3 position = new(transform.position.x + (Width * 0.5f + 0.05f) + emptyCount, transform.position.y, transform.position.z);
+                Vector3 position = new(transform.position.x + (width * 0.5f + 0.05f) + emptyCount, transform.position.y, transform.position.z);
 
                 if (position.x > 7)
                 {
@@ -121,10 +121,10 @@ namespace Assets.Project.Game.Scripts.Model
         private bool IsEmptyBlockUnder()
         {
             // ブロックの横幅分ブロックの下に空白があるかチェックする
-            for (int x = 0; x < Width; x++)
+            for (int x = 0; x < width; x++)
             {
                 // ブロックの先頭マスのX座標を取得 現在の座標-(ブロックの半分の幅+1マスの半分の幅)
-                float blockStartPositionX = transform.position.x - (Width * 0.5f) + 0.5f;
+                float blockStartPositionX = transform.position.x - (width * 0.5f) + 0.5f;
 
                 // チェックをする位置を計算
                 Vector3 checkPosition = new(blockStartPositionX + x, transform.position.y - 1.0f, transform.position.z);

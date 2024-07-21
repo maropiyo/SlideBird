@@ -125,7 +125,7 @@ namespace Assets.Project.Game.Scripts.Model
                     blockPrefabs.Remove(blockPrefab);
 
                     // ブロックの横幅を取得
-                    float width = blockPrefab.GetComponent<Block>().Width;
+                    float width = blockPrefab.GetComponent<Block>().width;
 
                     // ブロックの横幅に合わせてX座標を計算
                     float XPos = currentXPos + (width / 2) - 0.5f;

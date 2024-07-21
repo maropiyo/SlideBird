@@ -123,7 +123,7 @@ namespace Assets.Project.Game.Scripts.Model
         private void AdjustBlockPosition(GameObject block)
         {
             // ブロックの横幅
-            int width = block.GetComponent<Block>().Width;
+            int width = block.GetComponent<Block>().width;
 
             switch (width)
             {
