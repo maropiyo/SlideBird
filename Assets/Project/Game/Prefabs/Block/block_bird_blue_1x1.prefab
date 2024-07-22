@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 8466274975192497341}
   - component: {fileID: 572395614729524356}
   - component: {fileID: 224967959752206715}
-  - component: {fileID: 1845925917028260828}
   - component: {fileID: 4485938403280061794}
   m_Layer: 6
   m_Name: block_bird_blue_1x1
@@ -100,23 +99,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   width: 1
-  isFalling: 0
+  isFallAllowed: 0
   blockLayer:
     serializedVersion: 2
     m_Bits: 64
-  isHolding: 0
---- !u!114 &1845925917028260828
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1524527517471939350}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d6e4181917384ff18f78f3a91c052bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!61 &4485938403280061794
 BoxCollider2D:
   m_ObjectHideFlags: 0

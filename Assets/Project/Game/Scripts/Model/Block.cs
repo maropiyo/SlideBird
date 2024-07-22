@@ -10,8 +10,8 @@ namespace Assets.Project.Game.Scripts.Model
     {
         // 横幅
         public int width;
-        // 移動許可フラグ
-        public bool isMoveAllowed = false;
+        // 落下許可フラグ
+        public bool isFallAllowed = false;
         // ブロックのレイヤーマスク
         [SerializeField] private LayerMask blockLayer;
 
@@ -43,6 +43,14 @@ namespace Assets.Project.Game.Scripts.Model
         }
 
         /// <summary>
+        /// 1マス上に移動する
+        /// </summary>
+        public void MoveUp()
+        {
+            transform.DOMoveY(transform.position.y + 1, 0.1f);
+        }
+
+        /// <summary>
         /// 1マス下に移動する
         /// </summary>
         private void MoveDown()
@@ -57,7 +65,7 @@ namespace Assets.Project.Game.Scripts.Model
         /// ・下にブロックがない
         /// ・オブジェクトのy座標が整数値である
         /// ・オブジェクトがグリッドの2段目(y=1)以上にある
-        /// ・移動許可フラグが立っている
+        /// ・落下許可フラグがtrue
         /// </summary>
         /// <returns>ブロックは落下可能か</returns>
         private bool CanFall()
@@ -67,7 +75,7 @@ namespace Assets.Project.Game.Scripts.Model
             // オブジェクトがグリッドの2段目(y=1)以上にあるか
             bool isAboveFirstRow = transform.position.y >= 1;
 
-            return IsEmptyBlockUnder() && isOnGrid && isAboveFirstRow && isMoveAllowed;
+            return IsEmptyBlockUnder() && isOnGrid && isAboveFirstRow && isFallAllowed;
         }
 
         /// <summary>

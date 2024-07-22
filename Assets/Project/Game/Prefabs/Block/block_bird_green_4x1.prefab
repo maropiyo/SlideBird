@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 3772159866089164090}
   - component: {fileID: 7173245975448951086}
   - component: {fileID: -795459945011657124}
-  - component: {fileID: -3802542723012894777}
   - component: {fileID: 2903062388797488404}
   m_Layer: 6
   m_Name: block_bird_green_4x1
@@ -100,23 +99,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   width: 4
-  isFalling: 0
+  isFallAllowed: 0
   blockLayer:
     serializedVersion: 2
     m_Bits: 64
-  isHolding: 0
---- !u!114 &-3802542723012894777
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2308843756222593218}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d6e4181917384ff18f78f3a91c052bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!61 &2903062388797488404
 BoxCollider2D:
   m_ObjectHideFlags: 0
