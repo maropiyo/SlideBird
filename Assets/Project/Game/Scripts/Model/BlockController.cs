@@ -130,14 +130,11 @@ namespace Assets.Project.Game.Scripts.Model
             // 現在のブロックリストに追加
             currentBlocks.AddRange(nextBlocks);
 
-            // 次のブロックリストをクリア
-            nextBlocks.Clear();
+            // 次のブロックを生成
+            GenerateNextRowBlocks();
 
             // 現在のブロックを１マス上に移動
             await MoveBlocksUp(currentBlocks);
-
-            // 次のブロックを生成
-            GenerateNextRowBlocks();
 
             // ブロックの落下を許可
             SetBlockFallAllowed(true);
@@ -148,6 +145,9 @@ namespace Assets.Project.Game.Scripts.Model
         /// </summary>
         private void GenerateNextRowBlocks()
         {
+            // 次に生成するブロックリストがある場合は削除
+            nextBlocks?.Clear();
+
             // 次に生成するブロックリストを取得
             nextBlocks = blockGenerator.GenerateRowBlocks(board.columns);
         }
