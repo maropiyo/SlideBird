@@ -6,10 +6,10 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Project/Scenes/TitleScene.unity
+    path: Assets/Project/Title/Scenes/TitleScene.unity
     guid: 3fc8acdd13e6c734bafef6554d6fdbcd
   - enabled: 1
-    path: Assets/Project/Scenes/GameScene.unity
+    path: Assets/Project/Game/Scenes/GameScene.unity
     guid: 9ba364e3e350349eb8e293d0aed8b6b1
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 5e38bc012acc64142a8dcfb0ceab7f80, type: 2}
