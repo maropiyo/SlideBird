@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 
@@ -45,9 +46,9 @@ namespace Assets.Project.Game.Scripts.Model
         /// <summary>
         /// 1マス上に移動する
         /// </summary>
-        public void MoveUp()
+        public async UniTask MoveUp()
         {
-            transform.DOMoveY(transform.position.y + 1, 0.1f);
+            await transform.DOMoveY(transform.position.y + 1, 0.2f).AsyncWaitForCompletion();
         }
 
         /// <summary>

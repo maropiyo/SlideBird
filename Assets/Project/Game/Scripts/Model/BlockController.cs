@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Assets.Project.Game.Scripts.Model
@@ -31,21 +32,30 @@ namespace Assets.Project.Game.Scripts.Model
         // ブロックの可動範囲のX最大値
         private float maxX = 0;
 
-        void Start()
+        async void Start()
         {
             // ボードを生成する
             board.GenerateBoard();
 
             // 次にボードに追加するブロックを生成
             GenerateNextRowBlocks();
+
+            await UniTask.Delay(1000);
+
+            // ブロックを追加
+            await PushNextBlocks();
+            // ブロックを追加
+            await PushNextBlocks();
+            // ブロックを追加
+            await PushNextBlocks();
         }
 
-        void Update()
+        async void Update()
         {
             if (Input.GetKeyDown(KeyCode.G))
             {
                 // ブロックをボードに追加する
-                PushNextBlocks();
+                await PushNextBlocks();
             }
 
             // ブロックを持っていない状態でタップしたとき
@@ -96,7 +106,7 @@ namespace Assets.Project.Game.Scripts.Model
         /// <summary>
         /// 次のブロックをボードに追加する
         /// </summary>
-        private void PushNextBlocks()
+        private async UniTask PushNextBlocks()
         {
             // 次のブロックがnullか0の場合は処理を抜ける
             if (nextBlocks == null || nextBlocks.Count == 0)
@@ -124,7 +134,7 @@ namespace Assets.Project.Game.Scripts.Model
             nextBlocks.Clear();
 
             // 現在のブロックを１マス上に移動
-            MoveBlocksUp(currentBlocks);
+            await MoveBlocksUp(currentBlocks);
 
             // 次のブロックを生成
             GenerateNextRowBlocks();
@@ -158,13 +168,19 @@ namespace Assets.Project.Game.Scripts.Model
         /// ブロックのリストを１マス上に移動する
         /// </summary>
         /// <param name="blocks">ブロックのリスト</param>
-        private void MoveBlocksUp(List<GameObject> blocks)
+        private async UniTask MoveBlocksUp(List<GameObject> blocks)
         {
-            // ブロックのリストを１マス上に移動
+            // タスクのリストを作成
+            List<UniTask> tasks = new List<UniTask>();
+
+            // 各ブロックのMoveUpタスクをリストに追加
             foreach (var block in blocks)
             {
-                block.GetComponent<Block>().MoveUp();
+                tasks.Add(block.GetComponent<Block>().MoveUp());
             }
+
+            // すべてのタスクが完了するまで待機
+            await UniTask.WhenAll(tasks);
         }
 
         /// <summary>
