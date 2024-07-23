@@ -51,6 +51,7 @@ namespace Assets.Project.Game.Scripts.Model
             await PushNextBlocks();
             // ブロックを追加
             await PushNextBlocks();
+
             // ブロックを落下させる
             await FallBlocks();
         }
