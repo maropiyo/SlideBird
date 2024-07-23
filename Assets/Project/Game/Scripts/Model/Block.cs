@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 
@@ -10,19 +11,8 @@ namespace Assets.Project.Game.Scripts.Model
     {
         // 横幅
         public int width;
-        // 落下許可フラグ
-        public bool isFallAllowed = false;
         // ブロックのレイヤーマスク
         [SerializeField] private LayerMask blockLayer;
-
-        void Update()
-        {
-            // ブロックが落下可能であれば1マス下に移動
-            if (CanFall())
-            {
-                MoveDown();
-            }
-        }
 
         /// <summary>
         /// ブロックの左に何マス空白があるか
@@ -45,18 +35,20 @@ namespace Assets.Project.Game.Scripts.Model
         /// <summary>
         /// 1マス上に移動する
         /// </summary>
-        public void MoveUp()
+        public async UniTask MoveUp()
         {
-            transform.DOMoveY(transform.position.y + 1, 0.1f);
+            await transform.DOMoveY(transform.position.y + 1, 0.3f).AsyncWaitForCompletion();
         }
 
         /// <summary>
-        /// 1マス下に移動する
+        /// 落下可能であれば1マス下に移動する
         /// </summary>
-        private void MoveDown()
+        public async UniTask MoveDown()
         {
-            // ブロックを1マス下に移動
-            transform.DOMoveY(transform.position.y - 1, 0.1f);
+            if (CanFall())
+            {
+                await transform.DOMoveY(transform.position.y - 1, 0.1f).AsyncWaitForCompletion();
+            }
         }
 
         /// <summary>
@@ -65,17 +57,16 @@ namespace Assets.Project.Game.Scripts.Model
         /// ・下にブロックがない
         /// ・オブジェクトのy座標が整数値である
         /// ・オブジェクトがグリッドの2段目(y=1)以上にある
-        /// ・落下許可フラグがtrue
         /// </summary>
         /// <returns>ブロックは落下可能か</returns>
-        private bool CanFall()
+        public bool CanFall()
         {
             // オブジェクトのy座標が整数値であるか
             bool isOnGrid = transform.position.y % 1 == 0;
             // オブジェクトがグリッドの2段目(y=1)以上にあるか
             bool isAboveFirstRow = transform.position.y >= 1;
 
-            return IsEmptyBlockUnder() && isOnGrid && isAboveFirstRow && isFallAllowed;
+            return IsEmptyBlockUnder() && isOnGrid && isAboveFirstRow;
         }
 
         /// <summary>
