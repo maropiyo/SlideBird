@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -7,12 +6,15 @@ namespace Assets.Project.Game.Scripts.Model
 {
     /// <summary>
     /// ブロックの制御クラス
+    /// ボードとブロックの生成、移動、削除などの処理を行う
     /// </summary>
     public class BlockController : MonoBehaviour
     {
+        // ゲームマネージャー
+        [SerializeField] private GameManager gameManager;
         // ボード
         [SerializeField] private Board board;
-        // ブロックの生成クラス
+        // ブロックジェネレーター
         [SerializeField] private BlockGenerator blockGenerator;
         // メインカメラ
         [SerializeField] private Camera mainCamera;
@@ -38,12 +40,6 @@ namespace Assets.Project.Game.Scripts.Model
         private float minX = 0;
         // ブロックの可動範囲のX最大値
         private float maxX = 0;
-
-        async void Start()
-        {
-            // ゲームを開始する
-            await OnGameStart();
-        }
 
         async void Update()
         {
@@ -87,9 +83,9 @@ namespace Assets.Project.Game.Scripts.Model
         }
 
         /// <summary>
-        /// ゲームを開始したときの処理
+        /// 初期化処理
         /// </summary>
-        private async UniTask OnGameStart()
+        public async UniTask Initialize()
         {
             // ボードを生成する
             board.GenerateBoard();
@@ -139,6 +135,9 @@ namespace Assets.Project.Game.Scripts.Model
                 // ブロックを離す
                 holdingBlock = null;
 
+                // 0.2秒待機
+                await UniTask.Delay(200);
+
                 // ブロックを落下させる
                 await FallBlocks();
 
@@ -160,6 +159,13 @@ namespace Assets.Project.Game.Scripts.Model
                 {
                     // ブロックを落下させる
                     await FallBlocks();
+                }
+
+                // ブロックのY座標が9以上の場合はゲームオーバー処理を行う
+                if (currentBlocks.Exists(block => block.transform.position.y >= 9))
+                {
+                    // ゲームオーバー処理
+                    gameManager.GameOver();
                 }
             }
             // ブロックを離す
