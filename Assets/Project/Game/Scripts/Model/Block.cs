@@ -52,6 +52,15 @@ namespace Assets.Project.Game.Scripts.Model
         }
 
         /// <summary>
+        /// ブロックを削除する
+        /// </summary>
+        public async UniTask DestroyBlock()
+        {
+            // 削除する
+            await transform.DOScale(Vector3.zero, 0.3f).OnComplete(() => Destroy(gameObject)).AsyncWaitForCompletion();
+        }
+
+        /// <summary>
         /// ブロックは落下可能か
         /// 以下の条件をすべて満たす場合にtrueを返す
         /// ・下にブロックがない

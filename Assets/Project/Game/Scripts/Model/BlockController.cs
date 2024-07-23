@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -15,11 +16,15 @@ namespace Assets.Project.Game.Scripts.Model
         [SerializeField] private BlockGenerator blockGenerator;
         // メインカメラ
         [SerializeField] private Camera mainCamera;
+        // ブロックのレイヤーマスク
+        [SerializeField] private LayerMask blockLayer;
 
         // 現在のブロックリスト
         private readonly List<GameObject> currentBlocks = new();
         // 次に生成するブロックリスト
         private List<GameObject> nextBlocks;
+        // ブロックが移動中か
+        private bool isMoving = false;
 
         // 操作中のブロック
         private GameObject holdingBlock;
@@ -36,38 +41,14 @@ namespace Assets.Project.Game.Scripts.Model
 
         async void Start()
         {
-            // ボードを生成する
-            board.GenerateBoard();
-
-            // 次にボードに追加するブロックを生成
-            GenerateNextRowBlocks();
-
-            // 0.5秒待機
-            await UniTask.Delay(500);
-
-            // ブロックを追加
-            await PushNextBlocks();
-            // ブロックを追加
-            await PushNextBlocks();
-            // ブロックを追加
-            await PushNextBlocks();
-
-            // ブロックを落下させる
-            await FallBlocks();
+            // ゲームを開始する
+            await OnGameStart();
         }
 
         async void Update()
         {
-            if (Input.GetKeyDown(KeyCode.G))
-            {
-                // ブロックをボードに追加する
-                await PushNextBlocks();
-                // ブロックを落下させる
-                await FallBlocks();
-            }
-
             // ブロックを持っていない状態でタップしたとき
-            if (Input.GetMouseButtonDown(0) && holdingBlock == null)
+            if (Input.GetMouseButtonDown(0) && holdingBlock == null && !isMoving)
             {
                 // タップ位置を取得
                 tapPosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
@@ -92,24 +73,65 @@ namespace Assets.Project.Game.Scripts.Model
             }
 
             // ブロックを掴んでいる間に左右に移動
-            if (holdingBlock != null)
+            if (holdingBlock != null && !isMoving)
             {
                 holdingBlock.transform.position = new Vector3(Mathf.Clamp(mainCamera.ScreenToWorldPoint(Input.mousePosition).x + offsetX, minX, maxX), holdingBlock.transform.position.y, holdingBlock.transform.position.z);
             }
 
             // ブロックを離したとき
-            if (Input.GetMouseButtonUp(0) && holdingBlock != null)
+            if (Input.GetMouseButtonUp(0) && holdingBlock != null && !isMoving)
             {
                 // ブロックの移動が終了したときの処理を実行
-                OnMoveEnd();
+                await OnMoveEnd();
             }
+        }
+
+        /// <summary>
+        /// ゲームを開始したときの処理
+        /// </summary>
+        private async UniTask OnGameStart()
+        {
+            // ボードを生成する
+            board.GenerateBoard();
+
+            // 次にボードに追加するブロックを生成
+            GenerateNextRowBlocks();
+
+            // 0.5秒待機
+            await UniTask.Delay(500);
+
+            // ブロックの移動中フラグをtrueにする
+            isMoving = true;
+
+            // ブロックを追加
+            await PushNextBlocks();
+            // ブロックを追加
+            await PushNextBlocks();
+            // ブロックを追加
+            await PushNextBlocks();
+
+            // ブロックを落下させる
+            await FallBlocks();
+
+            // 横一列が揃っているブロックがなくなるまで削除と落下を繰り返す
+            while (await LineClear())
+            {
+                // ブロックを落下させる
+                await FallBlocks();
+            }
+
+            // ブロックの移動中フラグをfalseにする
+            isMoving = false;
         }
 
         /// <summary>
         /// ブロックの移動が終了したときの処理
         /// </summary>
-        private async void OnMoveEnd()
+        private async UniTask OnMoveEnd()
         {
+            // ブロックの移動中フラグをtrueにする
+            isMoving = true;
+
             // ブロックのX座標を調整
             AdjustBlockXPosition(holdingBlock);
 
@@ -122,14 +144,31 @@ namespace Assets.Project.Game.Scripts.Model
                 // ブロックを落下させる
                 await FallBlocks();
 
+                // 横一列が揃っているブロックがなくなるまで削除と落下を繰り返す
+                while (await LineClear())
+                {
+                    // ブロックを落下させる
+                    await FallBlocks();
+                }
+
                 // ブロックを追加する
                 await PushNextBlocks();
 
                 // ブロックを落下させる
                 await FallBlocks();
+
+                // 横一列が揃っているブロックがなくなるまで削除と落下を繰り返す
+                while (await LineClear())
+                {
+                    // ブロックを落下させる
+                    await FallBlocks();
+                }
             }
             // ブロックを離す
             holdingBlock = null;
+
+            // ブロックの移動中フラグをfalseにする
+            isMoving = false;
         }
 
 
@@ -239,6 +278,67 @@ namespace Assets.Project.Game.Scripts.Model
 
             // ブロックの位置を更新
             block.transform.position = new Vector3(adjustedXPosition, block.transform.position.y, block.transform.position.z);
+        }
+
+        /// <summary>
+        /// 横一列が揃っているブロックを削除する
+        /// </summary>
+        /// <returns>削除したか</returns>
+        private async UniTask<bool> LineClear()
+        {
+            // 削除したか
+            bool isCleared = false;
+
+            // ボードの行数分ループ
+            for (int y = 0; y < board.rows; y++)
+            {
+                // ブロックのリスト
+                HashSet<GameObject> blockList = new();
+
+                // ボードの列数分ループ
+                for (int x = 0; x < board.columns; x++)
+                {
+                    // 確認する位置
+                    Vector3 checkPosition = new(x, y, 0);
+
+                    // ブロックがない場合は次の行へ
+                    if (Physics2D.OverlapPoint(checkPosition, blockLayer))
+                    {
+                        GameObject hitBlock = Physics2D.OverlapPoint(checkPosition, blockLayer).gameObject;
+
+                        // ブロックがある場合はリストに追加(HashSetなので重複はしない)
+                        blockList.Add(hitBlock);
+
+                        // もし最後の列までブロックがある場合はブロックを削除する。
+                        if (x == board.columns - 1)
+                        {
+                            // タスクのリストを生成する
+                            List<UniTask> tasks = new();
+
+                            // ブロックを削除
+                            foreach (var block in blockList)
+                            {
+                                tasks.Add(block.GetComponent<Block>().DestroyBlock());
+
+                                currentBlocks.Remove(block);
+                            }
+
+                            // すべてのタスクが完了するまで待機
+                            await UniTask.WhenAll(tasks);
+
+                            // ブロックを削除したのでフラグをtrueにする
+                            isCleared = true;
+                        }
+                    }
+                    else
+                    {
+                        // ブロックがない場合は次の行へ
+                        break;
+                    }
+                }
+            }
+
+            return isCleared;
         }
     }
 }
