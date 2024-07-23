@@ -328,6 +328,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbbfd83cba45e42749a087bcc7a7162b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameManager: {fileID: 285499259}
   board: {fileID: 1789387513}
   blockGenerator: {fileID: 285499256}
   mainCamera: {fileID: 1818661830}

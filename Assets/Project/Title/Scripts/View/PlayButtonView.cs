@@ -6,9 +6,9 @@ using UnityEngine.UI;
 namespace Assets.Project.Title.Scripts.View
 {
     /// <summary>
-    /// プレイボタン(View)
+    /// プレイボタンのビュー
     /// </summary>
-    public class PlayButton : MonoBehaviour
+    public class PlayButtonView : MonoBehaviour
     {
         // ボタン
         [SerializeField] private Button _button;
