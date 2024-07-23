@@ -103,11 +103,9 @@ namespace Assets.Project.Game.Scripts.Model
             // ブロックの移動中フラグをtrueにする
             isMoving = true;
 
-            // ブロックを追加
+            // ブロックを３段分追加
             await PushNextBlocks();
-            // ブロックを追加
             await PushNextBlocks();
-            // ブロックを追加
             await PushNextBlocks();
 
             // ブロックを落下させる
