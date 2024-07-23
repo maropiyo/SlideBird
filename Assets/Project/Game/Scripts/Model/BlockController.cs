@@ -12,6 +12,8 @@ namespace Assets.Project.Game.Scripts.Model
     {
         // ゲームマネージャー
         [SerializeField] private GameManager gameManager;
+        // スコアマネージャー
+        [SerializeField] private ScoreManager scoreManager;
         // ボード
         [SerializeField] private Board board;
         // ブロックジェネレーター
@@ -27,6 +29,8 @@ namespace Assets.Project.Game.Scripts.Model
         private List<GameObject> nextBlocks;
         // ブロックが移動中か
         private bool isMoving = false;
+        // コンボ数
+        private int comboCount = 0;
 
         // 操作中のブロック
         private GameObject holdingBlock;
@@ -134,6 +138,9 @@ namespace Assets.Project.Game.Scripts.Model
             {
                 // ブロックを離す
                 holdingBlock = null;
+
+                // コンボ数をリセット
+                comboCount = 0;
 
                 // 0.2秒待機
                 await UniTask.Delay(200);
@@ -329,6 +336,13 @@ namespace Assets.Project.Game.Scripts.Model
 
                             // すべてのタスクが完了するまで待機
                             await UniTask.WhenAll(tasks);
+
+                            // コンボ数を加算
+                            comboCount++;
+                            Debug.Log("Combo: " + comboCount);
+
+                            // スコアを加算
+                            scoreManager.AddScore(comboCount);
 
                             // ブロックを削除したのでフラグをtrueにする
                             isCleared = true;
