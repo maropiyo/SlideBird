@@ -23,6 +23,8 @@ namespace Assets.Project.Game.Scripts.Model
 
         // 操作中のブロック
         private GameObject holdingBlock;
+        // 操作中のブロックの初期位置
+        private Vector3 initialHoldingBlockPosition = Vector3.zero;
         // タップ位置
         private Vector3 tapPosition = Vector3.zero;
         // ブロックの位置調整用のオフセット
@@ -40,7 +42,8 @@ namespace Assets.Project.Game.Scripts.Model
             // 次にボードに追加するブロックを生成
             GenerateNextRowBlocks();
 
-            await UniTask.Delay(1000);
+            // 0.5秒待機
+            await UniTask.Delay(500);
 
             // ブロックを追加
             await PushNextBlocks();
@@ -48,6 +51,8 @@ namespace Assets.Project.Game.Scripts.Model
             await PushNextBlocks();
             // ブロックを追加
             await PushNextBlocks();
+            // ブロックを落下させる
+            await FallBlocks();
         }
 
         async void Update()
@@ -56,6 +61,8 @@ namespace Assets.Project.Game.Scripts.Model
             {
                 // ブロックをボードに追加する
                 await PushNextBlocks();
+                // ブロックを落下させる
+                await FallBlocks();
             }
 
             // ブロックを持っていない状態でタップしたとき
@@ -70,10 +77,10 @@ namespace Assets.Project.Game.Scripts.Model
                 // ブロックがある場合
                 if (hit.collider != null && hit.collider.CompareTag("Block") && hit.collider.gameObject.transform.position.y >= 0)
                 {
-                    // ブロックの落下を禁止する
-                    SetBlockFallAllowed(false);
                     // ブロックを掴む
                     holdingBlock = hit.collider.gameObject;
+                    // 操作中のブロックの初期位置を設定
+                    initialHoldingBlockPosition = holdingBlock.transform.position;
                     // ブロックの座標とタップ位置のオフセットを計算
                     offsetX = holdingBlock.transform.position.x - tapPosition.x;
                     // ブロックの可動範囲のX最小値を設定
@@ -92,16 +99,38 @@ namespace Assets.Project.Game.Scripts.Model
             // ブロックを離したとき
             if (Input.GetMouseButtonUp(0) && holdingBlock != null)
             {
-                // ブロックのX座標を調整
-                AdjustBlockXPosition(holdingBlock);
+                // ブロックの移動が終了したときの処理を実行
+                OnMoveEnd();
+            }
+        }
 
+        /// <summary>
+        /// ブロックの移動が終了したときの処理
+        /// </summary>
+        private async void OnMoveEnd()
+        {
+            // ブロックのX座標を調整
+            AdjustBlockXPosition(holdingBlock);
+
+            // 初期位置から移動している場合
+            if (initialHoldingBlockPosition != holdingBlock.transform.position)
+            {
                 // ブロックを離す
                 holdingBlock = null;
 
-                // ブロックの落下を許可
-                SetBlockFallAllowed(true);
+                // ブロックを落下させる
+                await FallBlocks();
+
+                // ブロックを追加する
+                await PushNextBlocks();
+
+                // ブロックを落下させる
+                await FallBlocks();
             }
+            // ブロックを離す
+            holdingBlock = null;
         }
+
 
         /// <summary>
         /// 次のブロックをボードに追加する
@@ -113,9 +142,6 @@ namespace Assets.Project.Game.Scripts.Model
             {
                 return;
             }
-
-            // 現在のブロックが落下しないようにする
-            SetBlockFallAllowed(false);
 
             // ブロックをボードに追加する
             foreach (var block in nextBlocks)
@@ -135,9 +161,26 @@ namespace Assets.Project.Game.Scripts.Model
 
             // 現在のブロックを１マス上に移動
             await MoveBlocksUp(currentBlocks);
+        }
 
-            // ブロックの落下を許可
-            SetBlockFallAllowed(true);
+        /// <summary>
+        /// 落下可能なブロックを落下させる
+        /// </summary>
+        /// <returns></returns>
+        async UniTask FallBlocks()
+        {
+            // 落下可能なブロックがある間はループする
+            while (currentBlocks.Exists(block => block.GetComponent<Block>().CanFall()))
+            {
+                // タスクのリストを作成
+                List<UniTask> tasks = new();
+
+                // 落下可能なブロックのMoveDownタスクをリストに追加して落下させる
+                tasks.AddRange(currentBlocks.FindAll(block => block.GetComponent<Block>().CanFall()).ConvertAll(block => block.GetComponent<Block>().MoveDown()));
+
+                // すべてのタスクが完了するまで待機
+                await UniTask.WhenAll(tasks);
+            }
         }
 
         /// <summary>
@@ -150,18 +193,6 @@ namespace Assets.Project.Game.Scripts.Model
 
             // 次に生成するブロックリストを取得
             nextBlocks = blockGenerator.GenerateRowBlocks(board.columns);
-        }
-
-        /// <summary>
-        /// ゲーム上のブロックの落下許可フラグを設定する
-        /// </summary>
-        /// <param name="isFallAllowed">落下許可フラグ</param>
-        private void SetBlockFallAllowed(bool isFallAllowed)
-        {
-            foreach (var block in currentBlocks)
-            {
-                block.GetComponent<Block>().isFallAllowed = isFallAllowed;
-            }
         }
 
         /// <summary>
