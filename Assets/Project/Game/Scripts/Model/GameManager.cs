@@ -1,4 +1,5 @@
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 namespace Assets.Project.Game.Scripts.Model
 {
@@ -10,6 +11,8 @@ namespace Assets.Project.Game.Scripts.Model
     {
         // ブロックのコントローラー
         [SerializeField] private BlockController blockController;
+        // スコアマネージャー
+        [SerializeField] private ScoreManager scoreManager;
 
         async void Start()
         {
@@ -20,9 +23,14 @@ namespace Assets.Project.Game.Scripts.Model
         /// <summary>
         /// ゲームオーバー処理
         /// </summary>
-        public void GameOver()
+        public async void GameOver()
         {
-            // TODO: ゲームオーバー処理を実装する
+            // ブロックを全て破棄する
+            await blockController.DestroyAllBlocks();
+            // スコアをリセットする
+            scoreManager.ResetScore();
+            // 初期化処理を行う
+            await blockController.SetupBlocks();
         }
     }
 }

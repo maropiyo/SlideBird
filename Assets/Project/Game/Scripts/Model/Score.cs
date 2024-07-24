@@ -21,5 +21,13 @@ namespace Assets.Project.Game.Scripts.Model
         {
             CurrentScore.Value += score;
         }
+
+        /// <summary>
+        /// スコアをリセットする
+        /// </summary>
+        public void Reset()
+        {
+            CurrentScore.Value = 0;
+        }
     }
 }

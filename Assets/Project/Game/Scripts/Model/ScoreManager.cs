@@ -18,9 +18,16 @@ namespace Assets.Project.Game.Scripts.Model
         {
             // コンボ数に応じたスコアを計算する
             var score = 100 * comboCount * comboCount;
-            Debug.Log($"スコアを加算します: {score} {comboCount}コンボ");
             // スコアを加算する
             _score.Add(score);
+        }
+
+        /// <summary>
+        /// スコアをリセットする
+        /// </summary>
+        public void ResetScore()
+        {
+            _score.Reset();
         }
     }
 }

@@ -94,6 +94,15 @@ namespace Assets.Project.Game.Scripts.Model
             // ボードを生成する
             board.GenerateBoard();
 
+            // ブロックのセットアップ
+            await SetupBlocks();
+        }
+
+        /// <summary>
+        /// ブロックのセットアップ
+        /// </summary>
+        public async UniTask SetupBlocks()
+        {
             // 次にボードに追加するブロックを生成
             GenerateNextRowBlocks();
 
@@ -142,8 +151,8 @@ namespace Assets.Project.Game.Scripts.Model
                 // コンボ数をリセット
                 comboCount = 0;
 
-                // 0.2秒待機
-                await UniTask.Delay(200);
+                // 0.1秒待機
+                await UniTask.Delay(100);
 
                 // ブロックを落下させる
                 await FallBlocks();
@@ -357,6 +366,32 @@ namespace Assets.Project.Game.Scripts.Model
             }
 
             return isCleared;
+        }
+
+        /// <summary>
+        /// 全てのブロックを削除する
+        /// </summary>
+        public async UniTask DestroyAllBlocks()
+        {
+            // タスクのリストを生成する
+            List<UniTask> tasks = new();
+
+            // ブロックを削除
+            foreach (var block in currentBlocks)
+            {
+                tasks.Add(block.GetComponent<Block>().DestroyBlock());
+            }
+
+            foreach (var block in nextBlocks)
+            {
+                tasks.Add(block.GetComponent<Block>().DestroyBlock());
+            }
+
+            // すべてのタスクが完了するまで待機
+            await UniTask.WhenAll(tasks);
+
+            // 現在のブロックリストをクリア
+            currentBlocks.Clear();
         }
     }
 }

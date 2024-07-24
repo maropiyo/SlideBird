@@ -56,7 +56,6 @@ namespace Assets.Project.Game.Scripts.Model
         /// </summary>
         public async UniTask DestroyBlock()
         {
-            // 削除する
             await transform.DOScale(Vector3.zero, 0.3f).OnComplete(() => Destroy(gameObject)).AsyncWaitForCompletion();
         }
 
