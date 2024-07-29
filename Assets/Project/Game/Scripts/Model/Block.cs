@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using TMPro;
 using UnityEngine;
 
 namespace Assets.Project.Game.Scripts.Model
@@ -11,6 +12,8 @@ namespace Assets.Project.Game.Scripts.Model
     {
         // 横幅
         public int width;
+        // ブロックのポイント
+        public int point;
         // ブロックのレイヤーマスク
         [SerializeField] private LayerMask blockLayer;
 

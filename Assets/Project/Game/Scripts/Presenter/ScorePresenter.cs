@@ -13,8 +13,10 @@ namespace Assets.Project.Game.Scripts.Presenter
     {
         // スコアのモデル
         [SerializeField] private Score _score;
+        // レベルのモデル
+        [SerializeField] private Level _level;
         // スコアテキストのビュー
-        [SerializeField] private ScoreTextView _scoreTextView;
+        [SerializeField] private ScoreView _scoreView;
 
         private void Start()
         {
@@ -22,7 +24,21 @@ namespace Assets.Project.Game.Scripts.Presenter
             _score.CurrentScore
                 .Subscribe(score =>
                 {
-                    _scoreTextView.ShowScore(score);
+                    _scoreView.ShowScore(score);
+
+                    // スコアがレベルアップするかどうかを判定する
+                    if (_level.IsLevelUp(score))
+                    {
+                        // レベルアップする
+                        _level.LevelUp();
+                    }
+                }).AddTo(this);
+
+            // スコアの倍率を監視して、スコアの倍率テキストに表示する
+            _score.ScoreMultiplier
+                .Subscribe(multiplier =>
+                {
+                    _scoreView.ShowScoreMultiplier(multiplier);
                 }).AddTo(this);
         }
     }

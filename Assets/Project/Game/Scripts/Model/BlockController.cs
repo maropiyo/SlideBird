@@ -29,8 +29,6 @@ namespace Assets.Project.Game.Scripts.Model
         private List<GameObject> nextBlocks;
         // ブロックが移動中か
         private bool isMoving = false;
-        // コンボ数
-        private int comboCount = 0;
 
         // 操作中のブロック
         private GameObject holdingBlock;
@@ -149,7 +147,7 @@ namespace Assets.Project.Game.Scripts.Model
                 holdingBlock = null;
 
                 // コンボ数をリセット
-                comboCount = 0;
+                scoreManager.ResetCombo();
 
                 // 0.1秒待機
                 await UniTask.Delay(100);
@@ -332,27 +330,38 @@ namespace Assets.Project.Game.Scripts.Model
                         // もし最後の列までブロックがある場合はブロックを削除する。
                         if (x == board.columns - 1)
                         {
+                            // ポイントの合計
+                            int point = 0;
+
                             // タスクのリストを生成する
                             List<UniTask> tasks = new();
 
-                            // ブロックを削除
-                            foreach (var block in blockList)
-                            {
-                                tasks.Add(block.GetComponent<Block>().DestroyBlock());
+                            // コンボ数を加算
+                            scoreManager.PlusCombo();
 
-                                currentBlocks.Remove(block);
+                            // ブロックを削除
+                            foreach (var blockObject in blockList)
+                            {
+                                // ブロックのスクリプトを取得
+                                Block block = blockObject.GetComponent<Block>();
+
+                                // ポイントを加算
+                                point += block.point;
+
+                                // ブロックを削除するタスクをリストに追加
+                                tasks.Add(block.DestroyBlock());
+
+                                // 現在のブロックリストから削除
+                                currentBlocks.Remove(blockObject);
                             }
 
                             // すべてのタスクが完了するまで待機
                             await UniTask.WhenAll(tasks);
 
-                            // コンボ数を加算
-                            comboCount++;
-
                             // スコアを加算
-                            scoreManager.AddScore(comboCount);
+                            scoreManager.AddScore(point);
 
-                            // ブロックを削除したのでフラグをtrueにする
+                            // ブロックを削除したので削除フラグをtrueにする
                             isCleared = true;
                         }
                     }

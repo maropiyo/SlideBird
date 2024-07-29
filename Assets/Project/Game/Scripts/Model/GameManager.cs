@@ -29,6 +29,8 @@ namespace Assets.Project.Game.Scripts.Model
             await blockController.DestroyAllBlocks();
             // スコアをリセットする
             scoreManager.ResetScore();
+            // レベルをリセットする
+            scoreManager.ResetLevel();
             // 初期化処理を行う
             await blockController.SetupBlocks();
         }
