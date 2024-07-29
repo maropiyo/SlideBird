@@ -348,7 +348,6 @@ namespace Assets.Project.Game.Scripts.Model
 
                             // コンボ数を加算
                             comboCount++;
-                            Debug.Log("Combo: " + comboCount);
 
                             // スコアを加算
                             scoreManager.AddScore(comboCount);
