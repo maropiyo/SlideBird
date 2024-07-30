@@ -3,6 +3,7 @@ using Assets.Project.Game.Scripts.Model;
 using Assets.Project.Game.Scripts.View;
 using UnityEngine;
 using UniRx;
+using Cysharp.Threading.Tasks;
 
 namespace Assets.Project.Game.Scripts.Presenter
 {
@@ -20,17 +21,10 @@ namespace Assets.Project.Game.Scripts.Presenter
         {
             // 現在のコンボの値が2以上場合、コンボテキストを表示する
             _combo.CurrentCombo
-                .Subscribe(async comboCount =>
-                {
-                    if (comboCount > 1)
-                    {
-                        await _comboTextView.ShowComboTextAsync(comboCount);
-                    }
-                    else
-                    {
-                        _comboTextView.HideComboText();
-                    }
-                }).AddTo(this);
+                .Where(comboCount => comboCount > 1)
+                .SelectMany(comboCount => _comboTextView.ShowComboText(comboCount).ToObservable())
+                .Subscribe()
+                .AddTo(this);
         }
     }
 }

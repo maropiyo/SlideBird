@@ -146,9 +146,6 @@ namespace Assets.Project.Game.Scripts.Model
                 // ブロックを離す
                 holdingBlock = null;
 
-                // コンボ数をリセット
-                scoreManager.ResetCombo();
-
                 // 0.1秒待機
                 await UniTask.Delay(100);
 
@@ -174,6 +171,9 @@ namespace Assets.Project.Game.Scripts.Model
                     // ブロックを落下させる
                     await FallBlocks();
                 }
+
+                // コンボ数をリセット
+                scoreManager.ResetCombo();
 
                 // ブロックのY座標が9以上の場合はゲームオーバー処理を行う
                 if (currentBlocks.Exists(block => block.transform.position.y >= 9))
