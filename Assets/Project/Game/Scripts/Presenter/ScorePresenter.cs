@@ -26,12 +26,32 @@ namespace Assets.Project.Game.Scripts.Presenter
                 {
                     _scoreView.ShowScore(score);
 
-                    // スコアがレベルアップするかどうかを判定する
+                    // レベルアップするかどうかを判定する
                     if (_level.IsLevelUp(score))
                     {
                         // レベルアップする
                         _level.LevelUp();
+                        float prevScore = (_level.CurrentLevel.Value - 1) * (_level.CurrentLevel.Value - 1) * 100;
+                        float fillAmount = (score - prevScore) / (_level.NextLevelScore.Value - prevScore);
+                        _scoreView.UpdateExpGauge(fillAmount, true);
                     }
+                    else
+                    {
+
+                        float prevScore = (_level.CurrentLevel.Value - 1) * (_level.CurrentLevel.Value - 1) * 100;
+                        float fillAmount = (score - prevScore) / (_level.NextLevelScore.Value - prevScore);
+                        _scoreView.UpdateExpGauge(fillAmount, false);
+                    }
+                }).AddTo(this);
+
+            // 現在のレベルの値を監視して、レベルテキストに表示する
+            _level.CurrentLevel
+                .Subscribe(level =>
+                {
+                    // レベルに応じてスコアの倍率を変更する
+                    _score.ChangeMultiplier(level);
+                    // レベルテキストに表示する
+                    _scoreView.ShowLevel(level);
                 }).AddTo(this);
 
             // スコアの倍率を監視して、スコアの倍率テキストに表示する
