@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using TMPro;
 using UnityEngine;
 
 namespace Assets.Project.Game.Scripts.Model
@@ -11,6 +12,8 @@ namespace Assets.Project.Game.Scripts.Model
     {
         // 横幅
         public int width;
+        // ブロックのポイント
+        public int point;
         // ブロックのレイヤーマスク
         [SerializeField] private LayerMask blockLayer;
 
@@ -56,7 +59,6 @@ namespace Assets.Project.Game.Scripts.Model
         /// </summary>
         public async UniTask DestroyBlock()
         {
-            // 削除する
             await transform.DOScale(Vector3.zero, 0.3f).OnComplete(() => Destroy(gameObject)).AsyncWaitForCompletion();
         }
 

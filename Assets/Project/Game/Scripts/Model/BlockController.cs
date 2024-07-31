@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -7,12 +6,17 @@ namespace Assets.Project.Game.Scripts.Model
 {
     /// <summary>
     /// ブロックの制御クラス
+    /// ボードとブロックの生成、移動、削除などの処理を行う
     /// </summary>
     public class BlockController : MonoBehaviour
     {
+        // ゲームマネージャー
+        [SerializeField] private GameManager gameManager;
+        // スコアマネージャー
+        [SerializeField] private ScoreManager scoreManager;
         // ボード
         [SerializeField] private Board board;
-        // ブロックの生成クラス
+        // ブロックジェネレーター
         [SerializeField] private BlockGenerator blockGenerator;
         // メインカメラ
         [SerializeField] private Camera mainCamera;
@@ -38,12 +42,6 @@ namespace Assets.Project.Game.Scripts.Model
         private float minX = 0;
         // ブロックの可動範囲のX最大値
         private float maxX = 0;
-
-        async void Start()
-        {
-            // ゲームを開始する
-            await OnGameStart();
-        }
 
         async void Update()
         {
@@ -87,13 +85,22 @@ namespace Assets.Project.Game.Scripts.Model
         }
 
         /// <summary>
-        /// ゲームを開始したときの処理
+        /// 初期化処理
         /// </summary>
-        private async UniTask OnGameStart()
+        public async UniTask Initialize()
         {
             // ボードを生成する
             board.GenerateBoard();
 
+            // ブロックのセットアップ
+            await SetupBlocks();
+        }
+
+        /// <summary>
+        /// ブロックのセットアップ
+        /// </summary>
+        public async UniTask SetupBlocks()
+        {
             // 次にボードに追加するブロックを生成
             GenerateNextRowBlocks();
 
@@ -103,11 +110,9 @@ namespace Assets.Project.Game.Scripts.Model
             // ブロックの移動中フラグをtrueにする
             isMoving = true;
 
-            // ブロックを追加
+            // ブロックを３段分追加
             await PushNextBlocks();
-            // ブロックを追加
             await PushNextBlocks();
-            // ブロックを追加
             await PushNextBlocks();
 
             // ブロックを落下させる
@@ -141,6 +146,9 @@ namespace Assets.Project.Game.Scripts.Model
                 // ブロックを離す
                 holdingBlock = null;
 
+                // 0.1秒待機
+                await UniTask.Delay(100);
+
                 // ブロックを落下させる
                 await FallBlocks();
 
@@ -162,6 +170,16 @@ namespace Assets.Project.Game.Scripts.Model
                 {
                     // ブロックを落下させる
                     await FallBlocks();
+                }
+
+                // コンボ数をリセット
+                scoreManager.ResetCombo();
+
+                // ブロックのY座標が9以上の場合はゲームオーバー処理を行う
+                if (currentBlocks.Exists(block => block.transform.position.y >= 9))
+                {
+                    // ゲームオーバー処理
+                    gameManager.GameOver();
                 }
             }
             // ブロックを離す
@@ -312,21 +330,38 @@ namespace Assets.Project.Game.Scripts.Model
                         // もし最後の列までブロックがある場合はブロックを削除する。
                         if (x == board.columns - 1)
                         {
+                            // ポイントの合計
+                            int point = 0;
+
                             // タスクのリストを生成する
                             List<UniTask> tasks = new();
 
-                            // ブロックを削除
-                            foreach (var block in blockList)
-                            {
-                                tasks.Add(block.GetComponent<Block>().DestroyBlock());
+                            // コンボ数を加算
+                            scoreManager.PlusCombo();
 
-                                currentBlocks.Remove(block);
+                            // ブロックを削除
+                            foreach (var blockObject in blockList)
+                            {
+                                // ブロックのスクリプトを取得
+                                Block block = blockObject.GetComponent<Block>();
+
+                                // ポイントを加算
+                                point += block.point;
+
+                                // ブロックを削除するタスクをリストに追加
+                                tasks.Add(block.DestroyBlock());
+
+                                // 現在のブロックリストから削除
+                                currentBlocks.Remove(blockObject);
                             }
 
                             // すべてのタスクが完了するまで待機
                             await UniTask.WhenAll(tasks);
 
-                            // ブロックを削除したのでフラグをtrueにする
+                            // スコアを加算
+                            scoreManager.AddScore(point);
+
+                            // ブロックを削除したので削除フラグをtrueにする
                             isCleared = true;
                         }
                     }
@@ -339,6 +374,32 @@ namespace Assets.Project.Game.Scripts.Model
             }
 
             return isCleared;
+        }
+
+        /// <summary>
+        /// 全てのブロックを削除する
+        /// </summary>
+        public async UniTask DestroyAllBlocks()
+        {
+            // タスクのリストを生成する
+            List<UniTask> tasks = new();
+
+            // ブロックを削除
+            foreach (var block in currentBlocks)
+            {
+                tasks.Add(block.GetComponent<Block>().DestroyBlock());
+            }
+
+            foreach (var block in nextBlocks)
+            {
+                tasks.Add(block.GetComponent<Block>().DestroyBlock());
+            }
+
+            // すべてのタスクが完了するまで待機
+            await UniTask.WhenAll(tasks);
+
+            // 現在のブロックリストをクリア
+            currentBlocks.Clear();
         }
     }
 }

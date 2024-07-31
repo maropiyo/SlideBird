@@ -99,7 +99,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   width: 1
-  isFallAllowed: 0
+  point: 1
   blockLayer:
     serializedVersion: 2
     m_Bits: 64

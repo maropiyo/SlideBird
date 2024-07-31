@@ -10,13 +10,13 @@ namespace Assets.Project.Title.Scripts.Presenter
     /// </summary>
     public class TitlePresenter : MonoBehaviour
     {
-        // プレイボタン(View)
-        [SerializeField] private PlayButton _playButton;
+        // プレイボタンビュー
+        [SerializeField] private PlayButtonView _playButtonView;
 
         private void Start()
         {
-            // プレイボタンのクリックイベントを監視する
-            _playButton.OnClickAsObservable()
+            // プレイボタンビューのクリックイベントを監視する
+            _playButtonView.OnClickAsObservable()
                 .Subscribe(_ => OnClickPlayButton())
                 .AddTo(this);
         }
