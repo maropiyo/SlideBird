@@ -57,11 +57,11 @@ namespace Assets.Project.Game.Scripts.View
 
             if (isLevelUp)
             {
-                _expGauge.DOFillAmount(1, 0.5f * (1 - fillAmount)).OnComplete(() =>
+                _expGauge.DOFillAmount(1, 0.25f).OnComplete(() =>
                 {
                     // ゲージをリセットしてから再生する
                     _expGauge.fillAmount = 0;
-                    _expGauge.DOFillAmount(fillAmount, 0.5f * fillAmount);
+                    _expGauge.DOFillAmount(fillAmount, 0.25f);
                 });
             }
             else
