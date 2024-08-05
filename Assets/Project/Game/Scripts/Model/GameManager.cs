@@ -1,5 +1,6 @@
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using Assets.Project.Common.Scripts;
 
 namespace Assets.Project.Game.Scripts.Model
 {
@@ -16,6 +17,9 @@ namespace Assets.Project.Game.Scripts.Model
 
         async void Start()
         {
+            // ゲームスタート時の効果音を再生する
+            SoundManager.Instance.PlaySound(SoundType.GameStart);
+
             // ブロックの初期化処理を行う
             await blockController.Initialize();
         }
@@ -25,6 +29,8 @@ namespace Assets.Project.Game.Scripts.Model
         /// </summary>
         public async void GameOver()
         {
+            // ゲームオーバー時の効果音を再生する
+            SoundManager.Instance.PlaySound(SoundType.GameOver);
             // ブロックを全て破棄する
             await blockController.DestroyAllBlocks();
             // スコアをリセットする

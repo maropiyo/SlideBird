@@ -37,7 +37,6 @@ namespace Assets.Project.Game.Scripts.Presenter
                     }
                     else
                     {
-
                         float prevScore = (_level.CurrentLevel.Value - 1) * (_level.CurrentLevel.Value - 1) * 100;
                         float fillAmount = (score - prevScore) / (_level.NextLevelScore.Value - prevScore);
                         _scoreView.UpdateExpGauge(fillAmount, false);

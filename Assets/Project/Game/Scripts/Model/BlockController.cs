@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Assets.Project.Common.Scripts;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -217,6 +218,8 @@ namespace Assets.Project.Game.Scripts.Model
             // 次のブロックを生成
             GenerateNextRowBlocks();
 
+            SoundManager.Instance.PlaySound(SoundType.BlockUp);
+
             // 現在のブロックを１マス上に移動
             await MoveBlocksUp(currentBlocks);
         }
@@ -354,6 +357,8 @@ namespace Assets.Project.Game.Scripts.Model
                                 // 現在のブロックリストから削除
                                 currentBlocks.Remove(blockObject);
                             }
+
+                            SoundManager.Instance.PlaySound(SoundType.LineClear);
 
                             // すべてのタスクが完了するまで待機
                             await UniTask.WhenAll(tasks);
