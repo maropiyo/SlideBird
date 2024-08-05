@@ -171,6 +171,12 @@ namespace Assets.Project.Game.Scripts.Model
                 {
                     // ブロックを落下させる
                     await FallBlocks();
+
+                    // ブロックを追加する
+                    await PushNextBlocks();
+
+                    // ブロックを落下させる
+                    await FallBlocks();
                 }
 
                 // コンボ数をリセット
