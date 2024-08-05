@@ -1,3 +1,4 @@
+using Assets.Project.Common.Scripts;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -59,6 +60,9 @@ namespace Assets.Project.Game.Scripts.View
             {
                 _expGauge.DOFillAmount(1, 0.25f).OnComplete(() =>
                 {
+                    // レベルアップ時の効果音を再生する
+                    SoundManager.Instance.PlaySound(SoundType.LevelUp);
+
                     // ゲージをリセットしてから再生する
                     _expGauge.fillAmount = 0;
                     _expGauge.DOFillAmount(fillAmount, 0.25f);
