@@ -23,6 +23,8 @@ namespace Assets.Project.Game.Scripts.Model
         [SerializeField] private Camera mainCamera;
         // ブロックのレイヤーマスク
         [SerializeField] private LayerMask blockLayer;
+        // ブロックの移動中のガイド
+        [SerializeField] private GameObject guide;
 
         // 現在のブロックリスト
         private readonly List<GameObject> currentBlocks = new();
@@ -34,7 +36,7 @@ namespace Assets.Project.Game.Scripts.Model
         // 操作中のブロック
         private GameObject holdingBlock;
         // 操作中のブロックの初期位置
-        private Vector3 initialHoldingBlockPosition = Vector3.zero;
+        private GameObject initialHoldingBlock;
         // タップ位置
         private Vector3 tapPosition = Vector3.zero;
         // ブロックの位置調整用のオフセット
@@ -60,14 +62,25 @@ namespace Assets.Project.Game.Scripts.Model
                 {
                     // ブロックを掴む
                     holdingBlock = hit.collider.gameObject;
-                    // 操作中のブロックの初期位置を設定
-                    initialHoldingBlockPosition = holdingBlock.transform.position;
+                    // 操作中のブロックをコピー
+                    initialHoldingBlock = Instantiate(holdingBlock);
+                    // ブロックの判定を無効にする
+                    initialHoldingBlock.GetComponent<BoxCollider2D>().enabled = false;
+                    // ブロックを半透明にする
+                    initialHoldingBlock.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.5f);
                     // ブロックの座標とタップ位置のオフセットを計算
                     offsetX = holdingBlock.transform.position.x - tapPosition.x;
                     // ブロックの可動範囲のX最小値を設定
                     minX = tapPosition.x + offsetX - holdingBlock.GetComponent<Block>().EmptyCountBlockLeft();
                     // ブロックの可動範囲のX最大値を設定
                     maxX = tapPosition.x + offsetX + holdingBlock.GetComponent<Block>().EmptyCountBlockRight();
+
+                    // ガイドの位置をブロックの位置に合わせる
+                    guide.transform.position = new Vector3(holdingBlock.transform.position.x, 4.5f, guide.transform.position.z);
+                    // ガイドの横幅をブロックの横幅に合わせる
+                    guide.transform.localScale = new Vector3(holdingBlock.GetComponent<Block>().width, guide.transform.localScale.y, guide.transform.localScale.z);
+                    // ガイドを表示する
+                    guide.SetActive(true);
                 }
             }
 
@@ -75,11 +88,16 @@ namespace Assets.Project.Game.Scripts.Model
             if (holdingBlock != null && !isMoving)
             {
                 holdingBlock.transform.position = new Vector3(Mathf.Clamp(mainCamera.ScreenToWorldPoint(Input.mousePosition).x + offsetX, minX, maxX), holdingBlock.transform.position.y, holdingBlock.transform.position.z);
+                guide.transform.position = new Vector3(holdingBlock.transform.position.x, 4.5f, guide.transform.position.z);
             }
 
             // ブロックを離したとき
             if (Input.GetMouseButtonUp(0) && holdingBlock != null && !isMoving)
             {
+                // ガイドを非表示にする
+                guide.SetActive(false);
+                // 初期位置を示すブロックオブジェクトを削除
+                Destroy(initialHoldingBlock);
                 // ブロックの移動が終了したときの処理を実行
                 await OnMoveEnd();
             }
@@ -142,7 +160,7 @@ namespace Assets.Project.Game.Scripts.Model
             AdjustBlockXPosition(holdingBlock);
 
             // 初期位置から移動している場合
-            if (initialHoldingBlockPosition != holdingBlock.transform.position)
+            if (initialHoldingBlock.transform.position != holdingBlock.transform.position)
             {
                 // ブロックを離す
                 holdingBlock = null;
