@@ -22,4 +22,5 @@
 https://unityroom.com/games/slide-bird
 
 ## 参考にしたゲーム
+Slidey®：ブロックパズル
 https://play.google.com/store/apps/details?id=com.mavis.slidey&hl=ja
