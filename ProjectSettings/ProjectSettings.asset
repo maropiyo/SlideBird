@@ -138,7 +138,6 @@ PlayerSettings:
   loadStoreDebugModeEnabled: 0
   bundleVersion: 0.1.0
   preloadedAssets:
-  - {fileID: 7317475896406178156, guid: 5e38bc012acc64142a8dcfb0ceab7f80, type: 2}
   - {fileID: 11400000, guid: 5485ba8c4b98d4233ab6e76e10489c53, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -779,7 +778,7 @@ PlayerSettings:
   webGLTemplate: APPLICATION:Default
   webGLAnalyzeBuildSize: 0
   webGLUseEmbeddedResources: 0
-  webGLCompressionFormat: 0
+  webGLCompressionFormat: 1
   webGLWasmArithmeticExceptions: 0
   webGLLinkerTarget: 1
   webGLThreadsSupport: 0

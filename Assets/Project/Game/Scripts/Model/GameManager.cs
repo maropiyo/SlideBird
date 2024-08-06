@@ -29,6 +29,8 @@ namespace Assets.Project.Game.Scripts.Model
         /// </summary>
         public async void GameOver()
         {
+            // スコアを送信する
+            scoreManager.SendScore();
             // ゲームオーバー時の効果音を再生する
             SoundManager.Instance.PlaySound(SoundType.GameOver);
             // ブロックを全て破棄する

@@ -1,4 +1,5 @@
 using UnityEngine;
+using unityroom.Api;
 
 namespace Assets.Project.Game.Scripts.Model
 {
@@ -24,6 +25,23 @@ namespace Assets.Project.Game.Scripts.Model
             // スコアを加算する(ポイント * コンボ数 * スコア倍率)
             _score.Add(point * _combo.CurrentCombo.Value * _score.ScoreMultiplier.Value);
             Debug.Log("ポイント: " + point + " コンボ: " + _combo.CurrentCombo.Value + " 倍率: " + _score.ScoreMultiplier.Value);
+        }
+
+        /// <summary>
+        /// UnityRoomのスコアを送信する
+        /// WebGLのビルド時のみ有効にしている
+        /// </summary>
+        public void SendScore()
+        {
+            switch (Application.platform)
+            {
+                case RuntimePlatform.WebGLPlayer:
+                    // UnityRoomのスコアボードにスコアを送信する
+                    UnityroomApiClient.Instance.SendScore(1, _score.CurrentScore.Value, ScoreboardWriteMode.HighScoreDesc);
+                    break;
+                default:
+                    break;
+            }
         }
 
         /// <summary>
