@@ -20,3 +20,6 @@
 
 以下のリンクからUnityRoomでプレイすることができます。  
 https://unityroom.com/games/slide-bird
+
+## 参考にしたゲーム
+https://play.google.com/store/apps/details?id=com.mavis.slidey&hl=ja
