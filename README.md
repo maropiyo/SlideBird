@@ -39,7 +39,7 @@ https://unityroom.com/games/slide-bird
 * Fun Casual Sounds  
 https://assetstore.unity.com/packages/audio/sound-fx/fun-casual-sounds-64048
 
-* ゆるゆる散歩  
+* 【フリーBGM集】かわいい曲(全38曲)【音楽素材集】
 https://booth.pm/ja/items/3464234
 
 ## 参考にしたゲーム
