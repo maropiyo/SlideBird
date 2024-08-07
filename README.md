@@ -15,8 +15,7 @@
 ## 使用ライブラリ
 
 * UniRx: GUI周りのアーキテクチャとしてMV(R)Pアーキテクチャを実現するために使用しました。
-
-参考:https://qiita.com/toRisouP/items/5365936fc14c7e7eabf9
+参考: [【Unity】Model-View-(Reactive)Presenterパターンとは何なのか](https://qiita.com/toRisouP/items/5365936fc14c7e7eabf9)
 
 * UniTask: DOTweenのアニメーション終了を待機する非同期処理の実装に使用しました。
 
