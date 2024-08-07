@@ -23,7 +23,7 @@
 
 ## デモ版
 
-以下のリンクからUnityRoomでプレイすることができます！
+以下のリンクからUnityRoomでプレイすることができます  
 https://unityroom.com/games/slide-bird
 
 ## 参考にしたゲーム
