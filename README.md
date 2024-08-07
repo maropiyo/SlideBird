@@ -34,6 +34,14 @@
 以下のリンクからUnityRoomでプレイすることができます  
 https://unityroom.com/games/slide-bird
 
+## 使用アセット
+
+* Fun Casual Sounds  
+https://assetstore.unity.com/packages/audio/sound-fx/fun-casual-sounds-64048
+
+* ゆるゆる散歩  
+https://booth.pm/ja/items/3464234
+
 ## 参考にしたゲーム
 
 Slidey®：ブロックパズル  
