@@ -27,8 +27,6 @@
 
 * DOTween: アニメーションを作るために使用しました。
 
-[ゲームのコア部分のフォルダ](https://github.com/maropiyo/SlideBird/tree/master/Assets/Project/Game)
-
 ## デモ版
 
 以下のリンクからUnityRoomでプレイすることができます  
@@ -39,7 +37,3 @@ https://unityroom.com/games/slide-bird
 * 効果音: [Fun Casual Sounds](https://assetstore.unity.com/packages/audio/sound-fx/fun-casual-sounds-64048)
 
 * 音楽: [フリーBGM MOMIZizm MUSiC](https://music.storyinvention.com/)
-
-## 参考にしたゲーム
-
-[Slidey®：ブロックパズル](https://play.google.com/store/apps/details?id=com.mavis.slidey&hl=ja)
