@@ -16,16 +16,16 @@
 
 ## 操作方法
 
-ブロックを長押しした状態で左右に移動させます。
+ブロックを長押しした状態で左右に移動させます
 
 ## 主な使用ライブラリ
 
-* UniRx: GUI周りのアーキテクチャとしてMV(R)Pアーキテクチャを実現するために使用しました。  
+* UniRx: GUI周りのアーキテクチャとしてMV(R)Pアーキテクチャを実現するために使用  
 参考: [【Unity】Model-View-(Reactive)Presenterパターンとは何なのか](https://qiita.com/toRisouP/items/5365936fc14c7e7eabf9)
 
-* UniTask: DOTweenのアニメーション終了を待機する非同期処理の実装に使用しました。
+* UniTask: DOTweenのアニメーション終了を待機する非同期処理の実装に使用
 
-* DOTween: アニメーションを作るために使用しました。
+* DOTween: アニメーションに使用
 
 ## デモ版
 
